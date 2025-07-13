@@ -8,6 +8,7 @@ import heroImage from './assets/hero-image.jpg';
 import interfaceImage from './assets/interface-image.webp';
 import posInterface from './assets/pos-interface.png';
 
+
 function App() {
   return (
     <div className="min-h-screen bg-background">
