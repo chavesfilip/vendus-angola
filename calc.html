@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Conversão (AOA -> USDT -> EUR)</title>
+    <style>
+        :root {
+            --primary-color: #2b4c7e;
+            --secondary-color: #4a90e2;
+            --background-color: #f4f7f6;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 550px;
+            padding: 30px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 13.5px;
+            color: #4a5568;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 12px;
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px 10px 42px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+        }
+
+        .result-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .result-row:not(:last-child) {
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .result-value {
+            font-weight: bold;
+            font-size: 16px;
+            color: #1a202c;
+        }
+
+        .final-total {
+            background-color: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .final-total span:first-child {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 16px;
+        }
+
+        .final-total .total-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Conversor Kwanza ➔ USDT ➔ Euro</h2>
+    
+    <div class="section-title">1. Entrada & Câmbio (AOA ➔ USDT)</div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="aoaAmount">Valor em Kwanzas</label>
+            <div class="input-wrapper">
+                <span class="input-prefix">Kz</span>
+                <input type="number" id="aoaAmount" value="100000" min="0" step="any" oninput="calcular()">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="aoaUsdtRate">Câmbio Pago (Kz/USDT)</label>
+            <div class="input-wrapper">
+                <span class="input-prefix">Kz</span>
+                <input type="number" id="aoaUsdtRate" value="950" min="0.01" step="any" oninput="calcular()">
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">2. Conversão & Taxas (USDT ➔ EUR)</div>
+    
+    <div class="grid-2">
+        <div class="form-group">
+            <label for="usdtEurRate">Câmbio USDT para EUR</label>
+            <div class="input-wrapper">
+                <span class="input-prefix">$</span>
+                <input type="number" id="usdtEurRate" value="0.92" min="0.01" step="any" oninput="calcular()">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="feePercent1">Taxa Adicional 1 (%)</label>
+            <div class="input-wrapper">
+                <span class="input-prefix">%</span>
+                <input type="number" id="feePercent1" value="1.5" min="0" step="any" oninput="calcular()">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="feePercent2">Taxa Adicional 2 (%)</label>
+        <div class="input-wrapper">
+            <span class="input-prefix">%</span>
+            <input type="number" id="feePercent2" value="0.5" min="0" step="any" oninput="calcular()">
+        </div>
+    </div>
+
+    <div class="section-title">3. Resumo dos Resultados</div>
+    
+    <div class="result-box">
+        <div class="result-row">
+            <span>Valor Recebido em USDT:</span>
+            <span class="result-value" id="finalUsdt">0.00 USDT</span>
+        </div>
+        <div class="result-row">
+            <span>Valor Bruto em EUR:</span>
+            <span class="result-value" id="rawEur">0.00 €</span>
+        </div>
+        <div class="result-row">
+            <span>Total de Taxas Deduzidas:</span>
+            <span class="result-value" id="totalFees" style="color: #c0392b;">0.00 €</span>
+        </div>
+    </div>
+
+    <div class="final-total">
+        <span>VALOR FINAL EM EUR:</span>
+        <span class="total-val" id="finalEur">0.00 €</span>
+    </div>
+</div>
+
+<script>
+function calcular() {
+    // Obter os valores dos campos
+    const aoaAmount = parseFloat(document.getElementById('aoaAmount').value) || 0;
+    const aoaUsdtRate = parseFloat(document.getElementById('aoaUsdtRate').value) || 1;
+    const usdtEurRate = parseFloat(document.getElementById('usdtEurRate').value) || 0;
+    const feePercent1 = parseFloat(document.getElementById('feePercent1').value) || 0;
+    const feePercent2 = parseFloat(document.getElementById('feePercent2').value) || 0;
+
+    // Cálculo do USDT em relação ao Kwanza
+    const usdtDisponivel = aoaAmount / aoaUsdtRate;
+    document.getElementById('finalUsdt').innerText = usdtDisponivel.toFixed(2) + " USDT";
+
+    // Valor em EUR em relação aos USDT disponíveis (Bruto)
+    const valorBrutoEur = usdtDisponivel * usdtEurRate;
+    document.getElementById('rawEur').innerText = valorBrutoEur.toFixed(2) + " €";
+
+    // Cálculo das taxas (aplicado em percentagem sobre o valor bruto em EUR)
+    const taxa1 = valorBrutoEur * (feePercent1 / 100);
+    const taxa2 = valorBrutoEur * (feePercent2 / 100);
+    const totalTaxas = taxa1 + taxa2;
+
+    // Valor Final Líquido em EUR
+    const valorFinalEur = valorBrutoEur - totalTaxas;
+
+    // Atualizar a interface gráfica
+    document.getElementById('totalFees').innerText = totalTaxas.toFixed(2) + " €";
+    document.getElementById('finalEur').innerText = valorFinalEur.toFixed(2) + " €";
+}
+
+// Inicializa o cálculo na abertura do arquivo
+window.onload = calcular;
+</script>
+
+</body>
+</html>
